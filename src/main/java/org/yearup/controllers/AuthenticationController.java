@@ -44,14 +44,13 @@ public class AuthenticationController {
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginDto loginDto) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+            new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.createToken(authentication, false);
 
-        try
-        {
+        try {
             User user = userDao.getByUserName(loginDto.getUsername());
 
             if (user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -59,9 +58,7 @@ public class AuthenticationController {
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
             return new ResponseEntity<>(new LoginResponseDto(jwt, user), httpHeaders, HttpStatus.OK);
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
@@ -70,11 +67,9 @@ public class AuthenticationController {
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDto newUser) {
 
-        try
-        {
+        try {
             boolean exists = userDao.exists(newUser.getUsername());
-            if (exists)
-            {
+            if (exists) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Already Exists.");
             }
 
@@ -87,10 +82,11 @@ public class AuthenticationController {
             profileDao.create(profile);
 
             return new ResponseEntity<>(user, HttpStatus.CREATED);
-        }
-        catch (Exception e)
-        {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        } catch (Exception e) {
+            if (e instanceof ResponseStatusException status)
+                throw status;
+
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.", e);
         }
     }
 
