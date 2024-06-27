@@ -1,9 +1,13 @@
 package org.yearup.data;
 
-import org.yearup.models.ShoppingCart;
+import org.yearup.models.*;
 
-public interface ShoppingCartDao
-{
+public interface ShoppingCartDao {
     ShoppingCart getByUserId(int userId);
-    // add additional method signatures here
+
+    void addItem(int userId, int itemId);
+
+    void updateItem(int userId, int itemId, int quantity);
+
+    void clear(int userId);
 }
