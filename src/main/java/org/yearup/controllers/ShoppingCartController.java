@@ -33,6 +33,8 @@ public class ShoppingCartController {
     // each method in this controller requires a Principal object as a parameter
     @GetMapping
     public ShoppingCart getCart(Principal principal) {
+        if (principal == null)
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         try {
             String userName = principal.getName();
             User user = userDao.getByUserName(userName);
@@ -49,6 +51,8 @@ public class ShoppingCartController {
     @PostMapping("/products/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ShoppingCart addItem(Principal principal, @PathVariable("id") int item) {
+        if (principal == null)
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         try {
             String userName = principal.getName();
             User user = userDao.getByUserName(userName);
@@ -66,6 +70,8 @@ public class ShoppingCartController {
     // the BODY should be a ShoppingCartItem - quantity is the only value that will be updated
     @PutMapping("/products/{id}")
     public void updateItem(Principal principal, @PathVariable int itemId, @RequestBody ShoppingCartItem item) {
+        if (principal == null)
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         try {
             String userName = principal.getName();
             User user = userDao.getByUserName(userName);
@@ -82,6 +88,8 @@ public class ShoppingCartController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void clear(Principal principal) {
+        if (principal == null)
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         try {
             String userName = principal.getName();
             User user = userDao.getByUserName(userName);
