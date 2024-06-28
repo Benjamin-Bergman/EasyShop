@@ -15,8 +15,8 @@ import java.util.List;
 @RequestMapping("categories")
 @CrossOrigin
 public class CategoriesController {
-    private CategoryDao categoryDao;
-    private ProductDao productDao;
+    private final CategoryDao categoryDao;
+    private final ProductDao productDao;
 
     @Autowired
     public CategoriesController(ProductDao productDao, CategoryDao categoryDao) {

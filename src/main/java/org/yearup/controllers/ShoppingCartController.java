@@ -19,15 +19,13 @@ import java.security.Principal;
 @CrossOrigin
 public class ShoppingCartController {
     // a shopping cart requires
-    private ShoppingCartDao shoppingCartDao;
-    private UserDao userDao;
-    private ProductDao productDao;
+    private final ShoppingCartDao shoppingCartDao;
+    private final UserDao userDao;
 
     @Autowired
-    public ShoppingCartController(ShoppingCartDao shoppingCartDao, UserDao userDao, ProductDao productDao) {
+    public ShoppingCartController(ShoppingCartDao shoppingCartDao, UserDao userDao) {
         this.shoppingCartDao = shoppingCartDao;
         this.userDao = userDao;
-        this.productDao = productDao;
     }
 
     // each method in this controller requires a Principal object as a parameter
